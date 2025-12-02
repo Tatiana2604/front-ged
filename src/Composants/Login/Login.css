@@ -1,0 +1,42 @@
+#login{
+  height: 100vh;
+  background: #f1f1f1;
+}
+
+#login .container-login{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 350px;
+  min-width: 350px;
+  background-color: white;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#login .container-login .item-login{
+  width: 50%;
+  height: 100%;
+}
+
+#login .container-login .item-1 form{
+  padding: 20px;
+}
+
+/* #login .container-login .item-1{
+  width: 48%;
+} */
+
+#login .container-login .item-2{
+  background: violet;
+  margin-left: 10px;
+  border-radius: 20% 0% 0% 20% / 20% 44% 10% 20%;
+}
+
+#login .container-login .item-2 p{
+  margin-top: 100px;
+}

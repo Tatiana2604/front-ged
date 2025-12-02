@@ -1,0 +1,14 @@
+.body{
+    /* background: blue; */
+    width: calc(100vw - 240px);
+    height: 91vh;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    transition: all 0.3s;
+
+}
+
+.body.maximize{
+    width: calc(100vw - 60px);
+}
