@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 export default function AccesDenied() {
+  const navigate = useNavigate()
 
     return (
       <div className="flex flex-col items-center justify-center h-[70vh] text-center px-4">
@@ -14,6 +15,7 @@ export default function AccesDenied() {
   
         <button
             className="button is-link my-4"
+            onClick={() => navigate('/main/accueil')}
         >
           Retour à l'accueil
         </button>

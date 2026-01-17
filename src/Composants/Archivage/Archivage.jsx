@@ -21,6 +21,8 @@ const Archive = () => {
 
   const [pieces, setPieces] = useState(null); // Va stocker toutes les pieces (utile pour filtrer les documents)
 
+  const [liste_exercices, setListeExercices] = useState(null)
+
 
   const recherche= useRef({
     poste_comptable: "",
@@ -47,19 +49,9 @@ const Archive = () => {
 
   const [selectedDocs, setSelectedDocs] = useState([]);
 
-
-  const saisie = (e) => {
-    const { name, value } = e.target;
-    // setRecherche((prev) => ({
-    //   ...prev,
-    //   [name]: value,
-    // }));
-  };
-
-
-  const search = (e) => {
-    e.preventDefault();
-  };
+  const obtenir_liste_exercices = () => {
+    fetchData(`${API_URL}/data/exercice/get`, {}, 'get', setListeExercices)
+  }
 
 
   // Cette fonction va recuprer toutes les pieces dans la BD
@@ -171,7 +163,7 @@ const Archive = () => {
         <td>{item.document__piece__nom_piece}</td>
         <td>{item.document__poste_comptable__nom_poste}</td>
         <td>{item.document__date_arrivee}</td>
-        <td>{item.document__created_at}</td>
+        {/* <td>{item.document__created_at}</td> */}
         <td>{month_int_to_string(item.document__mois)}</td>
         <td>{item.document__exercice}</td>
       </tr>
@@ -325,6 +317,7 @@ const Archive = () => {
 
   useEffect(() => {
     recuperer_toutes_les_pieces();
+    obtenir_liste_exercices();
   }, [])
 
 
@@ -349,9 +342,9 @@ const Archive = () => {
 
   return (
 
-    <div className="w-full px-6 bg-red-400">
+    <div className="w-full">
 
-      <p className="text-xl font-semibold my-2 mx-4 text-xl">📂 Archives</p>
+      <p className="text-xl font-semibold my-2 text-xl p-4">Liste des Archives</p>
 
         {
           user ?
@@ -399,10 +392,10 @@ const Archive = () => {
       {/* 🔽 Formulaire de recherche  */}
       <form className="my-2">
 
-        <div className="flex gap-6 items-center justify-center">
+        <div className="flex gap-4 items-center justify-center bg-white rounded-sm shadow-sm p-2">
 
         {/* Poste comptable */}
-        <div className=''>
+        <div className='flex-1'>
 
           <div className="">
             <label className="label">Poste comptable</label>
@@ -433,7 +426,7 @@ const Archive = () => {
         </div>
 
         {/* Pièces */}
-        <div className="">
+        <div className="flex-1">
 
           <div className="">
             <label className="label">Pièces</label>
@@ -445,7 +438,7 @@ const Archive = () => {
               <option value="">Toutes les pièces</option>
               {
                 pieces && pieces.map((item, index) => (
-                  <option value={item['nom_piece']}>{item['nom_piece']}</option>
+                  <option key={index} value={item['nom_piece']}>{item['nom_piece']}</option>
                 ))
               }
                   
@@ -457,7 +450,7 @@ const Archive = () => {
         </div>
 
         {/* Mois */}
-        <div className="">
+        <div className="flex-1">
 
           <div className="">
             <label className="label">Mois</label>
@@ -487,7 +480,7 @@ const Archive = () => {
         </div>
 
           {/* Exercice */}
-        <div className="">
+        <div className="flex-1">
 
           <div className="">
             <label className="label">Exercice</label>
@@ -497,9 +490,13 @@ const Archive = () => {
 
             <select className="" value={recherche.current.annee} onChange={(e) => filtrer_documents('annee', e.target.value)}>
               <option value="">------</option>
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
+
+              {
+                liste_exercices && liste_exercices.map((item, index) => (
+                  <option key={index} value={item['annee']}>{item['annee']}</option>
+                ))              
+              }
+
             </select>
 
           </div>
@@ -507,7 +504,7 @@ const Archive = () => {
         </div>
 
 
-        <div className="">
+        <div className="flex-1">
 
           <div className="">
             <label className="label">Date Arrivée</label>
@@ -553,11 +550,8 @@ const Archive = () => {
           }
 
 
-      {documents?.length === 0 ? (
-        <p>Aucune archive trouvée.</p>
-      ) : (  
         <>
-        <table className="table is-fullwidth">
+        <table className="table border border-b-4 border-pink-300 is-hoverable is-fullwidth">
 
           <thead className="bg-gray-100 text-left">
 
@@ -567,7 +561,7 @@ const Archive = () => {
                 <th>Pièce</th>
                 <th>Poste Comptable</th>
                 <th>Date arrivée</th>
-                <th>Date d'enregistrement</th>
+                {/* <th>Date d'enregistrement</th> */}
                 <th>Mois</th>
                 <th>Exercice</th>
             </tr>
@@ -575,17 +569,27 @@ const Archive = () => {
           </thead>
 
           <tbody>
-          {data_paginate ? (
+          {
+            data_paginate ? 
+              data_paginate.length > 0 ?
+
                 data_paginate.map((item, index) => (
                   <ArchiveItem key={index} item={item} index={index} />
                 ))
-              ) : (
+
+              : 
                 <tr>
-                  <td colSpan="8" className="has-text-centered">
-                    Aucun document trouvé
+                  <td colSpan="7" className="has-text-centered">
+                    Aucun document archivé
                   </td>
                 </tr>
-              )}
+            : 
+              <tr>
+                <td colSpan="7" className="has-text-centered">
+                  En attente des données
+                </td>
+              </tr>
+          }
           </tbody>
         </table>
 
@@ -593,7 +597,6 @@ const Archive = () => {
 
         </>
 
-      )}
 
     </div>
   );

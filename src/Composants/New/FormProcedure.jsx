@@ -119,10 +119,13 @@ export default function FormProcedure() {
 
 
   return (
+
     <div className='px-6 py-1'>
+
       <p className='my-2 text-xl font-bold'>Formulaire de procédure</p>
+
       {/* Formulaire d'ajout et de modification */}
-      <form onSubmit={handleCreateOrUpdate} className="my-2">
+      <form onSubmit={handleCreateOrUpdate} className="my-2 bg-white p-6 rounded-lg rounded-sm">
 
         <div className="flex flex-col">
           <label className="text-gray-700 font-medium mb-1">Phase</label>

@@ -43,7 +43,7 @@ export const useAuthentification = () =>{
         .then(data =>  {
             console.log(data);
             if(data.detail == 'Connecté'){
-                navigate('/main/accueil')
+                navigate('/main/liste_documents')
                 setIsSubmitting(false);
             }
             else{

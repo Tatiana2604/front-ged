@@ -33,13 +33,13 @@ export default function Main() {
     <>
       {
         user ?
-          <section id='main' className='bg-gray-50'>
+          <section id='main' className='bg-gray-100'>
 
             <Nav ref_nav={ref_nav}/>
 
             <Sidebar setIsMaximize={setIsMaximize} maximize_or_minimize={maximize_or_minimize}/>
 
-            <div className='body' ref={ref_bloc_main}>
+            <div className='body bg-gray-100 p-2' ref={ref_bloc_main}>
               <Outlet />
             </div>
 

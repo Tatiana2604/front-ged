@@ -11,6 +11,7 @@ export default function Sidebar({maximize_or_minimize}) {
   return (
     <div
       id="sidebar"
+      className="bg-green-800"
       style={{
         width: collapsed ? '60px' : '240px', // Réduit la sidebar
         transition: 'width 0.3s',
@@ -37,43 +38,49 @@ export default function Sidebar({maximize_or_minimize}) {
 
       <div className='container'>
         <div className='nav-left'></div>
-        {!collapsed && <a className="nav-item">Manipulation de document</a>}
+        { !collapsed && <img src={'/image/logo.png'} alt="Logo DBIFA" /> }
+        {!collapsed && <a className="nav-item">DBIFA</a>}
       </div>
 
       <ul className="menu">
 
         <li>
-          <NavLink to='/main/new'>
-            <i className='fas fa-file-alt'></i>
-            {!collapsed && 'Document d\'audit'}
-          </NavLink>
-        </li>
-
-        
-        <li>
-          <NavLink to='/main/accueil'>
-            <i className='fas fa-chart-line'></i>
-            {!collapsed && 'Suivi des pièces'}
-          </NavLink>
-        </li>
-        
-
-        <li>
-          <NavLink to="./enregistrer">
+          <NavLink to="/main/liste_documents">
             <i className="fas fa-save"></i>
             {!collapsed && 'Liste des documents'}
           </NavLink>
         </li>
 
         <li>
-          <NavLink to="./archivage">
+          <NavLink to="/main/archivage">
             <i className="fas fa-file-archive"></i>
             {!collapsed && 'Archivage des documents'}
           </NavLink>
         </li>
 
         <li>
-          <NavLink to="./Verification">
+          <NavLink to='/main/accueil'>
+            <i className='fas fa-chart-line'></i>
+            {!collapsed && 'Suivi des pièces'}
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink to='/main/procedure'>
+            <i className='fas fa-file-alt'></i>
+            {!collapsed && 'Documents d\'audit'}
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink to="/main/envoyer_documents">
+            <i className="fas fa-paper-plane"></i>
+            {!collapsed && 'Envoyer des documents'}
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink to="/main/Verification">
             <i className="fas fa-folder-open"></i>
              {!collapsed && 'Correspondence des documents'}
           </NavLink>
@@ -88,6 +95,7 @@ export default function Sidebar({maximize_or_minimize}) {
           </NavLink>
         </li>
       </ul>
+
     </div>
   );
 }

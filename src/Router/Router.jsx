@@ -11,6 +11,8 @@ import New from "../Composants/New/New";
 import Verification from "../Composants/Verification/verification";
 import AccesDenied from "../Composants/AccesDenied/AccesDenied";
 import FormProcedure from "../Composants/New/FormProcedure";
+import SendEmail from "../Composants/SendEmail/SendEmail";
+import PrivateRoute from "../Composants/PrivateRoute/PrivateRoute";
 
 const router=createBrowserRouter([
     {
@@ -33,28 +35,37 @@ const router=createBrowserRouter([
             // },
 
             {
-                path: 'new',
+                path: 'procedure',
                 element: <New/>
             },
 
-            {   
-                path: 'form_procedure',
-                element: <FormProcedure />
+            {
+                element: <PrivateRoute />,
+                children: [
+                    {   
+                        path: 'form_procedure',
+                        element: <FormProcedure />
+                    },
+                    {
+                        path: 'ajouter_document',
+                        element: <Form />
+                    },
+                ]
             },
 
             {
-                path:'enregistrer',
+                path:'liste_documents',
                 element: <Enregistrer />
-            },
-
-            {
-                path: 'ajouter',
-                element: <Form />
             },
 
             {
                 path:'archivage',
                 element: <Archivage />
+            },
+
+            {
+                path:'envoyer_documents',
+                element: <SendEmail />
             },
 
             {
@@ -78,7 +89,7 @@ const router=createBrowserRouter([
     },
 
     {
-        path: 'teste',
+        path: 'acces_denied',
         element: <AccesDenied />
     }
 

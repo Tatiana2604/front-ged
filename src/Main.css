@@ -1,6 +1,6 @@
 .body{
     /* background: blue; */
-    width: calc(100vw - 240px);
+    width: calc(100vw - 255px);
     height: 91vh;
     position: absolute;
     right: 0;
@@ -10,5 +10,5 @@
 }
 
 .body.maximize{
-    width: calc(100vw - 60px);
+    width: calc(100vw - 75px);
 }

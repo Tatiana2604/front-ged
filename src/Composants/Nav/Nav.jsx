@@ -23,8 +23,8 @@ export default function Nav({ref_nav}) {
     
 
   return (
-    <div className='nav_bar' ref={ref_nav}>
-        <p className='has-text-centered is-size-4 has-text-white is-inline-block'>Gestion Electronique des Données (G.E.D) </p>
+    <div className='nav_bar bg-green-800' ref={ref_nav}>
+        <p className='text-xl is-inline-block text-white'>Gestion Electronique des Données (G.E.D) </p>
 
         {/* <div className=''> */}
 

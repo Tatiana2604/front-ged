@@ -36,8 +36,8 @@ export default function New() {
     'numero_ordre': ''
   })
 
-  const currentPage = useRef(1);
-  const itemsPerPage = useRef(3)
+  const currentPage = useRef(1)
+  const itemsPerPage = useRef(5)
 
   // Recupérer toutes les données depuis PostgresQL vers l'API
   const loadProcedures = async (setState) => {
@@ -129,30 +129,23 @@ export default function New() {
   return (
 
     
-    <div className="mx-auto p-4 px-6 shadow rounded-md">
+    <div className="mx-auto">
 
-      <p className="text-2xl font-bold my-4 text-gray-800">Gestion des Procédures</p>
-
-      { user[0]['utilisateur__fonction'].toLowerCase() != 'auditeur' && (<div className="my-2">
-        <NavLink to='/main/form_procedure' className='button is-primary'>
-          Ajouter une procedure
-        </NavLink>
-      </div>) }
+      <p className="text-xl font-semibold my-2 p-4">Gestion des Procédures</p>
 
       {/* Formulaire d'ajout et de modification */}
-      <form className="flex items-center gap-4 mb-6">
+      <form className="flex items-center gap-4 my-2 bg-white rounded-sm shadow-sm p-2">
 
         <div className="mx-2">
-          <p className="font-bold text-xl">Rechercher des procédures : </p>
+          <p className="">Rechercher des procédures : </p>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-1">Phase</label>
+        <div className="flex-1">
           <select
             value={recherche.current.phase}
             onChange={(e) => recherche_procedure('phase', e.target.value)}
             required
-            className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-lg shadow-lg bg-white p-2"
           >
             <option value="" disabled>------</option>
             {phases.map((phase) => (
@@ -161,15 +154,14 @@ export default function New() {
           </select>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium mb-1">Numéro d'ordre</label>
+        <div className="flex-1">
           <input
             type="number"
-            placeholder="Numéro"
+            placeholder="Numéro d'ordre"
             value={recherche.current.numero_ordre}
             onChange={(e) => recherche_procedure('numero_ordre', e.target.value)}
             required
-            className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400"
+            className="input"
           />
         </div>
 
@@ -179,69 +171,95 @@ export default function New() {
       {/* Tableau des procédures */}
       <div className="overflow-x-auto">
 
-          {
-            result ?
-                result['succes'] ?
-                    <Alert message={result['succes']} bgColor={'has-background-success'} icon={'fas fa-check'} setResult={setResult}/>
-                : null
-            : null
-          }
+        {
+          result ?
+              result['succes'] ?
+                  <Alert message={result['succes']} bgColor={'has-background-success'} icon={'fas fa-check'} setResult={setResult}/>
+              : null
+          : null
+        }
 
-        <table className="w-full table-auto border-collapse">
+        { user[0]['utilisateur__fonction'].toLowerCase() != 'auditeur' && (
+          <div className="my-2">
+            <NavLink to='/main/form_procedure' className='button is-primary'>
+              Ajouter une procedure
+            </NavLink>
+          </div>
+        )}
+
+        <table className="w-full table border border-b-4 border-pink-300">
+
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="">
               <th className="border p-2 text-left">Phase</th>
               <th className="border p-2 text-left">N° d'ordre</th>
               <th className="border p-2 text-left">Procédure</th>
               <th className="border p-2 text-left">Document procédure</th>
               <th className="border p-2 text-left">Document travail validé</th>
-              <th className="border p-2 text-left">Actions</th>
+              <th className="border p-2 text-left">Action</th>
             </tr>
           </thead>
+
           <tbody>
-            {data_paginate && data_paginate.map((p) => (
-              <tr key={p.id} className="hover:bg-gray-50">
-                <td className="border p-2">{p.nom_phase || "N/A"}</td>
-                <td className="border p-2">{p.numero_orde}</td>
-                <td className="border p-2">{p.procedure || "N/A"}</td>
-                <td className="border p-2">
-                  {p.document_procedure ? (
-                    <a
-                      href={`${API_URL}/procedures/${p.id}/download_procedure/`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Télécharger
-                    </a>
-                  ) : (
-                    "Manquant"
-                  )}
-                </td>
-                <td className="border p-2">
-                  {p.document_travail_valide ? (
-                    <a
-                      href={`${API_URL}/procedures/${p.id}/download_travail/`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Télécharger
-                    </a>
-                  ) : (
-                    "Manquant"
-                  )}
-                </td>
-                <td className="border p-2">
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
-                  >
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {
+              data_paginate ?
+                data_paginate.length > 0 ?
+                  data_paginate.map((p) => (
+                    <tr key={p.id} className="hover:bg-gray-50">
+                      <td className="border p-2">{p.nom_phase || "N/A"}</td>
+                      <td className="border p-2">{p.numero_orde}</td>
+                      <td className="border p-2">{p.procedure || "N/A"}</td>
+                      <td className="border p-2">
+                        {p.document_procedure ? (
+                          <a
+                            href={`${API_URL}/procedures/${p.id}/download_procedure/`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            Télécharger
+                          </a>
+                        ) : (
+                          "Manquant"
+                        )}
+                      </td>
+                      <td className="border p-2">
+                        {p.document_travail_valide ? (
+                          <a
+                            href={`${API_URL}/procedures/${p.id}/download_travail/`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            Télécharger
+                          </a>
+                        ) : (
+                          "Manquant"
+                        )}
+                      </td>
+                      <td className="border p-2">
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          className="button is-danger is-outlined"
+                          disabled={ user[0]['utilisateur__fonction'].toLowerCase() == "auditeur" }
+                        >
+                          <span className="icon">
+                            <i className="fas fa-trash-alt"></i>
+                          </span>
+                          
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                : 
+                  <tr>
+                    <td colspan="6" className="has-text-centered">Aucune donnée à afficher</td>
+                  </tr>
+              : 
+                <tr>
+                  <td colspan="6" className="has-text-centered">En attente des données ...</td>
+                </tr>
+            }
           </tbody>
         </table>
 

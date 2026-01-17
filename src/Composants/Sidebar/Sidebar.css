@@ -2,20 +2,32 @@
 #sidebar {
     width: 240px;
     height: 100vh;
-    background: #044433; 
+    /* background: #044433;  */
     color: white;
     position: fixed;
     top: 0;
     left: 0;
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
     padding: 0.5rem 0;
     box-shadow: 2px 0 8px rgba(0,0,0,0.2);
     z-index: 3;
 }
+
+#sidebar .container {
+  /* background-color: violet; */
+  height: 150px;
+}
+
+#sidebar .container img {
+  display: block;
+  margin: 10px auto 0;
+  width: 110px;
+  height: 100px;
+}
   
  /* manipulation des document */
-  #sidebar .nav-item {
+  #sidebar .container .nav-item {
     font-size: 1.1rem;
     font-weight: bold;
     color: #f1f5f9;
@@ -25,15 +37,16 @@
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
  
-/* #sidebar .menu {
+#sidebar .menu {
   list-style: none;
-  padding: 0;
-  margin-top: 0;
-  flex: 1;
-} */
+  position: relative;
+  top: 0;
+  margin-top: 10px;
+  /* background-color: violet; */
+}
   
   #sidebar .menu li {
-    margin: 25px 0;
+    margin: 10px 0;
   }
 
   /* icone+menu */

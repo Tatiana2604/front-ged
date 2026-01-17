@@ -75,10 +75,10 @@ export default function Login() {
         </div>
 
         {/* Section droite */}
-        <div className="hidden md:flex bg-gradient-to-br from-indigo-500 to-blue-600 text-white flex-col items-center justify-center p-10">
+        <div className="hidden md:flex bg-gradient-to-br from-green-500 to-green-800 text-white flex-col items-center justify-center p-10">
           <h3 className="text-4xl font-bold mb-3">BIENVENUE</h3>
           <p className="text-center text-gray-100 text-lg">
-            Heureux de vous revoir 👋 <br />
+            Heureux de vous revoir<br />
             Connectez-vous pour accéder à votre espace.
           </p>
         </div>

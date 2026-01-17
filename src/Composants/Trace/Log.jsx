@@ -67,11 +67,11 @@ export default function Log(){
   return (
     <div className="container-log is-fullheight" >
 
-      <p className="my-4 mx-6 text-2xl font-semibold">Liste des actions effectuées sur le système</p>
+      <p className="my-4 mx-6 text-xl font-semibold">Liste des actions effectuées sur le système</p>
 
       <div className="px-6">
       
-        <table className="table is-relative is-striped is-hoverable is-fullwidth" style={{background: 'none'}}>
+        <table className="table border border-b-4 border-pink-300 is-relative is-hoverable is-fullwidth">
 
           <thead>
             <tr>
@@ -85,9 +85,27 @@ export default function Log(){
 
           <tbody>
             {
-              data_paginate && data_paginate.map((item, index) => (
-                <LogItem key={index} item={item}/>
-              ))
+              data_paginate ?
+
+                data_paginate.length > 0 ?
+
+                  data_paginate.map((item, index) => (
+                    <LogItem key={index} item={item}/>
+                  ))
+
+                : 
+                  <tr>
+                    <td colSpan="5" className="has-text-centered">
+                      Aucun donnée disponible
+                    </td>
+                  </tr>
+
+              : 
+                <tr>
+                  <td colSpan="5" className="has-text-centered">
+                    En attente des données ...
+                  </td>
+                </tr>
             }
           </tbody>
 

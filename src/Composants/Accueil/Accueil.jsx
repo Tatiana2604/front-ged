@@ -4,6 +4,27 @@ import { API_URL } from "../../Config/Config";
 import { useUserStore } from "../../store/useUserStore";
 import Pagination from "../Pagination/Pagination";
 
+// Chart.js
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+} from "chart.js";
+import { Doughnut, Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
+);
+
 export default function PiecesStatus() {
   const user = useUserStore((state) => state.user);
 
@@ -22,7 +43,10 @@ export default function PiecesStatus() {
   const [reload_data, setReloaData] = useState(false);
 
   const currentPage = useRef(1);
-  const itemsPerPage = useRef(4);
+  const itemsPerPage = useRef(3);
+
+  // mode d’affichage
+  const [viewMode, setViewMode] = useState("table"); // table | chart
 
   // ➕ États pour les statistiques
   const [stats, setStats] = useState({
@@ -97,6 +121,31 @@ export default function PiecesStatus() {
   };
 
 
+  //   /* =======================
+//       GRAPHIQUES
+//   ======================== */
+  const doughnutData = {
+    labels: ["Arrivées", "Non arrivées"],
+    datasets: [
+      {
+        data: [stats.arrived, stats.total - stats.arrived],
+        backgroundColor: ["#22c55e", "#ef4444"],
+      },
+    ],
+  };
+
+  const barData = {
+    labels: ["Total", "Arrivées", "Non arrivées"],
+    datasets: [
+      {
+        label: "Nombre de pièces",
+        data: [stats.total, stats.arrived, stats.total - stats.arrived],
+        backgroundColor: ['yellowgreen', "#3b82f6", "#f97316"],
+      },
+    ],
+  };
+
+
   // Générer les lignes pour le tableau selon la période et décades
   const RenderPieceRows = ({piece}) => {
     if (piece.periode?.toLowerCase() === "decadaire") {
@@ -115,8 +164,8 @@ export default function PiecesStatus() {
                 arrived ? "text-green-600" : "text-red-600"
               }`}
             >
-              {arrived ? "✅ Arrivée" : "❌ Non arrivée"}
-              {late ? " ⏰ Retard" : ""}
+              {arrived ? "Arrivée" : "Non arrivée"}
+              {late ? "; En retard" : ""}
             </td>
             <td className="p-2 border">
               {docsInDecade.length > 0 ? (
@@ -151,8 +200,8 @@ export default function PiecesStatus() {
             arrived ? "text-green-600" : "text-red-600"
           }`}
         >
-          {arrived ? "✅ Arrivée" : "❌ Non arrivée"}
-          {late ? " ⏰ Retard" : ""}
+          {arrived ? "✅ Arrivée" : "Non arrivée"}
+          {late ? "; En retard" : ""}
         </td>
         <td className="p-2 border">
           {docs.length > 0 ? (
@@ -196,30 +245,26 @@ export default function PiecesStatus() {
   }, [pieces, reload_data])
 
 
-  useEffect(() => {
-    console.log('pagination', data_paginate);
-  }, [data_paginate])
-
-
   return (
-    <div className="p-5">
-      <h2 className="text-xl font-bold mb-4">
+    <div className="p-2">
+      
+      <p className="p-4 text-xl font-semibold my-2">
         Suivi des pièces comptables par poste
-      </h2>
+      </p>
 
-      {/* Barre de recherche */}
-      <div className="bg-gray-50 border p-4 rounded-xl shadow-sm mb-6">
+      {/* Barre de recherche : Formulaire */}
+      <div className="bg-white p-4 rounded-sm shadow-sm my-2">
 
         <form onSubmit={rechercherPieces}>
           {/* <div className="grid grid-cols-5 gap-4"> */}
           <div className="flex items-center justify-center gap-4">
 
             {/* Poste comptable */}
-            <div>
-              <label className="block text-sm font-medium">Poste comptable</label>
+            <div className="flex-1">
               <input
               list="poste_comptable"
-                className="border p-2 rounded w-full"
+                className="input"
+                placeholder="Choisissez un poste comptable"
                 value={posteId}
                 onChange={(e) => setPosteId(e.target.value)}
                 required
@@ -233,32 +278,30 @@ export default function PiecesStatus() {
             </div>
 
             {/* Periode */}
-            <div>
-              <label className="block text-sm font-medium">Periode</label>
+            <div className="flex-1">
               <select
-                className="border p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded-sm w-full"
                 value={periode}
                 onChange={(e) => setPeriode(e.target.value)}
                 required
               >
-                <option value="">-- Toutes les periodes --</option>
+                <option value="">-- Périodes --</option>
                 <option value="Journalière">Journalière</option>
-                <option value="Mensuelle">Mensuelle</option>
                 <option value="Décadaire">Décadaire</option>
+                <option value="Mensuelle">Mensuelle</option>
               </select>
             </div>
 
             {/* Mois */}
-            <div>
-              <label className="block text-sm font-medium">Mois</label>
+            <div className="flex-1">
               <select
-                className="border p-2 rounded w-full"
+                className="border border-gray-300 p-2 rounded-sm w-full"
                 value={mois}
                 onChange={(e) => setMois(e.target.value)}
                 required
               >
                 <option value="" disabled>
-                  Mois
+                  -- Mois --
                 </option>
                 <option value="01">Janvier</option>
                 <option value="02">Février</option>
@@ -276,15 +319,14 @@ export default function PiecesStatus() {
             </div>
 
             {/* Exercice */}
-            <div>
-              <label className="block text-sm font-medium">Exercice</label>
+            <div className="flex-1">
               <select
                 className="w-full bg-white p-2 rounded-sm border border-gray-300"
                 value={exercice}
                 onChange={(e) => setExercice(e.target.value)}
                 required
               >
-                <option value="">------</option>
+                <option value="">-- Exercice --</option>
                 <option value="2025">2025</option>
                 <option value="2026">2026</option>
                 <option value="2027">2027</option>
@@ -301,16 +343,32 @@ export default function PiecesStatus() {
             </div>
           </div>
         </form>
+
       </div>
 
-      {/* ➕ Statistiques globales */}
       {pieces?.length > 0 && (
-        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm">
-          <p className="text-gray-700 font-medium text-lg">
-            📊 <strong>Total pièces :</strong> {stats.total} &nbsp; | &nbsp;
-            <strong>Arrivées :</strong> {stats.arrived} &nbsp; | &nbsp;
-            <strong>Pourcentage :</strong> {stats.percentage}%
-          </p>
+        <div className="flex justify-start mb-3 gap-2">
+          <button
+            onClick={() => setViewMode("table")}
+            className={`px-3 py-1 rounded border ${
+              viewMode === "table"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-700"
+            }`}
+          >
+            Tableau
+          </button>
+
+          <button
+            onClick={() => setViewMode("chart")}
+            className={`px-3 py-1 rounded border ${
+              viewMode === "chart"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-700"
+            }`}
+          >
+            Graphique
+          </button>
         </div>
       )}
 
@@ -318,11 +376,22 @@ export default function PiecesStatus() {
       {loading ? (
         <p>Chargement...</p>
       ) : pieces?.length === 0 ? (
-        <p>Aucune donnée à afficher</p>
-      ) : (
+        <p>Veuillez patienter ...</p>
+      ) : viewMode !== "chart" ? (
         <>
 
-        <table className="w-full border border-gray-300 rounded-xl shadow-sm">
+        {/* ➕ Statistiques globales */}
+        {pieces?.length > 0 && (
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm">
+            <p className="text-gray-700 font-medium text-lg">
+              📊 <strong>Total pièces :</strong> {stats.total} &nbsp; | &nbsp;
+              <strong>Arrivées :</strong> {stats.arrived} &nbsp; | &nbsp;
+              <strong>Pourcentage :</strong> {stats.percentage}%
+            </p>
+          </div>
+        )}
+
+        <table className="table w-full border border-b-4 border-pink-300">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-2 text-left border">Nom de la pièce</th>
@@ -338,7 +407,9 @@ export default function PiecesStatus() {
                   <RenderPieceRows key={index} piece={piece}/>
                 ))
                 
-              : null
+              : <tr className="text-center">
+                  <td colspan="4">Aucune donnée disponible</td>
+              </tr> 
             }
           </tbody>
         </table>
@@ -346,11 +417,22 @@ export default function PiecesStatus() {
         <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} liste={pieces} reload={reload_data} setReload={setReloaData} description="page" />  
 
         </>
-      )}
+      )
+
+      : <div className="flex gap-2 justify-center">
+
+          <div className='w-1/3 bg-white rounded-sm shadow-sm'>
+            <Doughnut data={doughnutData} />
+          </div>
+
+          <div className='w-2/3 bg-white rounded-sm shadow-sm'>
+            <Bar data={barData} />
+          </div>
+
+        </div>
+    }
 
 
     </div>
   );
 }
-
-

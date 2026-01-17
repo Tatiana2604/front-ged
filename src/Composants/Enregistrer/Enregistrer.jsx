@@ -35,6 +35,8 @@ export default function DocumentManager() {
 
   const [showForm, setShowForm] = useState(false);
 
+  const [liste_exercices, setListeExercices] = useState(null)
+
   const recherche= useRef({
     poste_comptable: "",
     piece: "",
@@ -47,6 +49,11 @@ export default function DocumentManager() {
   const itemsPerPage = useRef(3)
 
   const [selectedDocs, setSelectedDocs] = useState([]);
+
+
+  const obtenir_liste_exercices = () => {
+    fetchData(`${API_URL}/data/exercice/get`, {}, 'get', setListeExercices)
+  }
 
 
   const recuperer_toutes_les_pieces = () => {
@@ -307,13 +314,15 @@ export default function DocumentManager() {
           }
         </td>
 
+        <td className="has-text-centered">{item.version}</td>
+
         <td>{item.piece__nom_piece}</td>
 
         <td>{item.poste_comptable__nom_poste}</td>
 
         <td>{item.date_arrivee}</td>
 
-        <td>{item.created_at}</td>
+        {/* <td>{item.created_at}</td> */}
 
         <td>{month_int_to_string(item.mois)}</td>
 
@@ -324,6 +333,7 @@ export default function DocumentManager() {
 
 
   useEffect(() => {
+    obtenir_liste_exercices();
     recuperer_toutes_les_pieces();
   }, [])
 
@@ -365,24 +375,13 @@ export default function DocumentManager() {
   }, [result])
 
 
-
-
   return (
-    <div className="px-6" style={{height: "100%", padding: '15px'}}>
+    <div className="" style={{height: "100%"}}>
+
       <div className="">
 
-        {
-          user[0]['utilisateur__fonction'].toLowerCase() == 'auditeur' && (
-            <div className="mb-2">
-              <NavLink
-                to="../ajouter"
-                className="button is-primary"
-              >
-                Ajouter un document
-              </NavLink>
-            </div> )
-        }
 
+        <p className="p-4 text-xl font-semibold">Liste des documents</p>
 
         {
           user ?
@@ -429,10 +428,10 @@ export default function DocumentManager() {
         {/* 🔽 Formulaire de recherche  */}
         <form className="my-2">
 
-          <div className="flex gap-6 items-center justify-center">
+          <div className="flex gap-6 items-center justify-center bg-white rounded-sm shadow-sm p-2">
 
             {/* Poste comptable */}
-            <div className=''>
+            <div className='flex-1'>
 
               <div className="">
                 <label className="label">Poste comptable</label>
@@ -460,7 +459,7 @@ export default function DocumentManager() {
             </div>
 
             {/* Pièces */}
-            <div className="">
+            <div className="flex-1">
 
               <div className="">
                 <label className="label">Pièces</label>
@@ -484,7 +483,7 @@ export default function DocumentManager() {
             </div>
 
             {/* Mois */}
-            <div className="">
+            <div className="flex-1">
 
               <div className="">
                 <label className="label">Mois</label>
@@ -513,7 +512,7 @@ export default function DocumentManager() {
 
             </div>
 
-            <div className="">
+            <div className="flex-1">
 
               <div className="">
                 <label className="label">Exercice</label>
@@ -523,9 +522,13 @@ export default function DocumentManager() {
 
                 <select className="" value={recherche.current.annee} onChange={(e) => filtrer_documents('annee', e.target.value)}>
                   <option value="">------</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
+
+                  {
+                    liste_exercices && liste_exercices.map((item, index) => (
+                      <option key={index} value={item['annee']}>{item['annee']}</option>
+                    ))
+                  }
+
                 </select>
 
               </div>
@@ -533,7 +536,7 @@ export default function DocumentManager() {
             </div>
             
 
-            <div className="">
+            <div className="flex-1">
 
               <div className="">
                 <label className="label">Date Arrivée</label>
@@ -581,31 +584,52 @@ export default function DocumentManager() {
         {/* Tableau */}
         <div className="table-container is-fullheight" style={{height: "350px"}}>
 
-          <table className="table is-relative is-striped is-hoverable is-fullwidth" style={{background: 'none'}}>
+          {
+            user[0]['utilisateur__fonction'].toLowerCase() == 'auditeur' && (
+              <div className="mb-2">
+                <NavLink
+                  to="/main/ajouter_document"
+                  className="button is-primary"
+                >
+                  Ajouter un document
+                </NavLink>
+              </div> )
+          }
+
+          <table className="table border border-b-4 border-pink-300 is-relative is-striped is-hoverable is-fullwidth">
             <thead>
               <tr>
                 <th className="">Choisir</th>
                 <th>Document</th>
+                <th>Version</th>
                 <th>Pièce</th>
                 <th>Poste Comptable</th>
                 <th>Date arrivée</th>
-                <th>Date d'enregistrement</th>
+                {/* <th>Date d'enregistrement</th> */}
                 <th>Mois</th>
                 <th>Exercice</th>
               </tr>
             </thead>
             <tbody>
-              {data_paginate ? (
-                data_paginate.map((item, index) => (
-                  <DocumentItem key={index} item={item} index={index} />
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="8" className="has-text-centered">
-                    Aucun document trouvé
-                  </td>
-                </tr>
-              )}
+              {
+                data_paginate ? 
+                  data_paginate.length > 0 ?
+                    data_paginate.map((item, index) => (
+                      <DocumentItem key={index} item={item} index={index} />
+                    ))
+                  :
+                    <tr>
+                      <td colSpan="8" className="has-text-centered">
+                        Aucun document disponible
+                      </td>
+                    </tr>
+                : 
+                  <tr>
+                    <td colSpan="8" className="has-text-centered">
+                      En attente des données ...
+                    </td>
+                  </tr>
+              }
             </tbody>
           </table>
 

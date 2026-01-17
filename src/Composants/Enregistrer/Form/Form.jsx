@@ -14,6 +14,8 @@ export default function Form() {
     const [reset, setReset] = useState(true);
     const [result, setResult] = useState(null);
 
+    const [liste_exercices, setListeExercices] = useState(null)
+
 
 
     const [file, setFile] = useState({
@@ -30,6 +32,11 @@ export default function Form() {
         "type_fichier": "",
 
     })
+
+
+    const obtenir_liste_exercices = () => {
+        fetchData(`${API_URL}/data/exercice/get`, {}, 'get', setListeExercices)
+    }
 
 
     const handleChange = (item, value) => {
@@ -56,6 +63,9 @@ export default function Form() {
             info_supp += file['date_sje']
             const date = new Date(file['date_sje'])
             mois = date.getMonth() + 1;
+            if(mois < 10){
+                mois = `0${mois}`
+            }
             exercice = date.getFullYear();
         }
         
@@ -66,12 +76,7 @@ export default function Form() {
         formData.append('nom_fichier', nom_fichier);
         formData.append('info_supp', info_supp);
         formData.append('exercice', exercice);
-        if(mois < 10){
-            formData.append('mois', `0${mois}`);
-        }
-        else{
-            formData.append('mois', mois);
-        }
+        formData.append('mois', mois);
         formData.append('type_fichier',file['type_fichier']);
         formData.append('periode', file['periode']);
         formData.append('action', 'ajouter');
@@ -87,13 +92,18 @@ export default function Form() {
 
 
     useEffect(() => {
+
         fetchData(`${API_URL}/data/piece_comptable/get`, {}, 'get', setPieceComptable)
+
         fetchData(
             `${API_URL}/users/poste_comptable/all`,
             { action: "afficher_les_postes_comptables", user_id: user[0]["id"] },
             "post",
             setPosteComptable
         );
+
+        obtenir_liste_exercices()
+
     }, [])
 
 
@@ -115,10 +125,10 @@ export default function Form() {
     };
 
   return (
-    <div id='ajout-fichier'>
-        {/* <p className='is-size-4 has-text-centered my-2'>Formulaire d'ajout</p> */}
+    <div id='ajout-fichier' className="px-6">
+        <p className='p-4 has-text-centered text-xl font-semibold my-2'>Formulaire d'ajout des pièces justificatives</p>
 
-        <form onSubmit={handleSubmit} className="">
+        <form onSubmit={handleSubmit} className="bg-white px-6 py-2 rounded-lg shadow-sm">
         
             <div className='flex justify-center items-center gap-4 p-2'>
 
@@ -214,9 +224,13 @@ export default function Form() {
 
                                         <select name="" id="" value={file['exercice']}onChange={(e) => handleChange('exercice', e.target.value)}>
                                             <option value=""></option>
-                                            <option value="2025">2025</option>
-                                            <option value="2026">2026</option>
-                                            <option value="2027">2027</option>
+
+                                            {
+                                                liste_exercices && liste_exercices.map((item, index) => (
+                                                    <option key={index} value={item['annee']}>{item['annee']}</option>
+                                                ))
+                                            }
+
                                         </select>
 
                                     </div>
@@ -294,11 +308,13 @@ export default function Form() {
                             required
                             />
                             <span className="file-cta">
-                            <span className="file-icon">
-                                📂
+                                
+                                <span className="file-icon">
+                                    <i className="fas fa-upload"></i>
+                                </span>
+                                <span className="file-label">Choisir un fichier…</span>
                             </span>
-                            <span className="file-label">Choisir un fichier…</span>
-                            </span>
+
                             <span className="file-name">
                             {file['nom_fichier'] || "Aucun fichier sélectionné"}
                             </span>
