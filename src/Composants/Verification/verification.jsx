@@ -41,13 +41,13 @@ function Verification() {
   const recuperer_les_postes_comptables = () => {
 
     if(user[0]['utilisateur__fonction'].toUpperCase() == 'directeur'.toUpperCase()){
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['id']}, 'post', setPosteComptables)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['utilisateur_id']}, 'post', setPosteComptables)
     }
     else if(user[0]['utilisateur__fonction'].toUpperCase() == 'chef_unite'.toUpperCase()){
       fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables_zone', 'zone': user[0]['utilisateur__zone__id']}, 'post', setPosteComptables)
     }
     else{
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['id']}, 'post', setPosteComptables)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['utilisateur_id']}, 'post', setPosteComptables)
     }
 
   }

@@ -210,6 +210,7 @@ export default function DocumentManager() {
   }
 
 
+  // Liste des documents
   const obtenir_liste_des_documents = (setState) => {
 
     if(user[0]['utilisateur__fonction'].toUpperCase() == 'directeur'.toUpperCase()){
@@ -218,7 +219,7 @@ export default function DocumentManager() {
         {
           'action': 'listes_documents_directeur',
           'fonction': user[0]['utilisateur__fonction'], 
-          'utilisateur': user[0]['id']
+          'utilisateur': user[0]['utilisateur_id']
         }, 
         'post', 
         setState
@@ -242,7 +243,7 @@ export default function DocumentManager() {
         `${API_URL}/data/document/liste`,
         {
           'action': 'listes_documents_auditeur',
-          'utilisateur': user[0]['id']
+          'utilisateur': user[0]['utilisateur_id']
         }, 'post', 
         setState
       )
@@ -255,13 +256,13 @@ export default function DocumentManager() {
 
 
     if(user[0]['utilisateur__fonction'].toUpperCase() == 'directeur'.toUpperCase()){
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['id']}, 'post', setState)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['utilisateur_id']}, 'post', setState)
     }
     else if(user[0]['utilisateur__fonction'].toUpperCase() == 'chef_unite'.toUpperCase()){
       fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables_zone', 'zone': user[0]['utilisateur__zone__id']}, 'post', setState)
     }
     else{
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['id']}, 'post', setState)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['utilisateur_id']}, 'post', setState)
     }
 
   }

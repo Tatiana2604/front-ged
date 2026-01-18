@@ -49,6 +49,8 @@ const Archive = () => {
 
   const [selectedDocs, setSelectedDocs] = useState([]);
 
+
+  // Liste des exercices
   const obtenir_liste_exercices = () => {
     fetchData(`${API_URL}/data/exercice/get`, {}, 'get', setListeExercices)
   }
@@ -228,7 +230,7 @@ const Archive = () => {
         {
           'action': 'archives_documents_directeur',
           'fonction': user[0]['utilisateur__fonction'], 
-          'utilisateur': user[0]['id']
+          'utilisateur': user[0]['utilisateur_id']
         }, 
         'post', 
         setState
@@ -252,7 +254,7 @@ const Archive = () => {
         `${API_URL}/data/archive/list`,
         {
           'action': 'archives_documents_auditeur',
-          'utilisateur': user[0]['id']
+          'utilisateur': user[0]['utilisateur_id']
         }, 'post', setState
       )
     }
@@ -264,18 +266,19 @@ const Archive = () => {
   const obtenir_liste_poste_comptables = (setState) => {
 
     if(user[0]['utilisateur__fonction'].toUpperCase() == 'directeur'.toUpperCase()){
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['id']}, 'post', setState)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_tous_les_postes_comptables', 'fonction': user[0]['utilisateur__fonction'],'user_id': user[0]['utilisateur_id']}, 'post', setState)
     }
     else if(user[0]['utilisateur__fonction'].toUpperCase() == 'chef_unite'.toUpperCase()){
       fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables_zone', 'zone': user[0]['utilisateur__zone__id']}, 'post', setState)
     }
     else{
-      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['id']}, 'post', setState)
+      fetchData(`${API_URL}/users/poste_comptable/all`, {'action': 'afficher_les_postes_comptables', 'user_id': user[0]['utilisateur_id']}, 'post', setState)
     }
 
   }
 
 
+  // Liste des auditeurs
   const obtenir_liste_auditeurs = (setState) => {
  
     
@@ -289,6 +292,7 @@ const Archive = () => {
   }
 
 
+  
   const obtenir_liste_zones = () => {
     setZones(null);
     if(user[0]['utilisateur__fonction'].toUpperCase() == 'directeur'.toUpperCase()){

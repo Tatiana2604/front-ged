@@ -97,7 +97,7 @@ export default function Form() {
 
         fetchData(
             `${API_URL}/users/poste_comptable/all`,
-            { action: "afficher_les_postes_comptables", user_id: user[0]["id"] },
+            { action: "afficher_les_postes_comptables", user_id: user[0]["utilisateur_id"] },
             "post",
             setPosteComptable
         );
