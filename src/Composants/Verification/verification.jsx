@@ -72,8 +72,14 @@ function Verification() {
 
   
   useEffect(() => {
+    const original_title = document.title
+    document.title = 'Comparer des fichiers'
     recuperer_toutes_les_pieces();
     recuperer_les_postes_comptables();
+
+    return () => {
+      document.title = original_title
+    }
   }, [])
 
   // const handleSubmit = async (e) => {

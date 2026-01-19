@@ -224,7 +224,14 @@ export default function PiecesStatus() {
 
   // Charger les postes comptables
   useEffect(() => {
+    const original_title = document.title
+    document.title = 'Suivi des pièces comptables'
+
     obtenir_liste_poste_comptables()
+
+    return () => {
+      document.title = original_title
+    }
   }, []);
 
 

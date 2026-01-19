@@ -46,7 +46,13 @@ export default function Log(){
 
 
   useEffect(() => {
+    const original_title = document.title
+    document.title = 'Traçabilités'
     recuperer_journaux()
+
+    return () => {
+      document.title = original_title
+    }
   }, [])
 
 

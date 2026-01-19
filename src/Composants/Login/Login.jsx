@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthentification } from '../../hooks/useAuthentification';
 import './Login.css';
@@ -18,6 +18,17 @@ export default function Login() {
     alert('connexion réussi');
     Navigate("/accueil");
   };
+
+
+  useEffect(() => {
+    const original_title = document.title
+    document.title = 'Login'
+    return () => {
+      document.title = original_title
+    }
+
+  }, [])
+
 
   return (
     <div id="login" className="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 px-4">

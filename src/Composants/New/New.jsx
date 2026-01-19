@@ -112,9 +112,16 @@ export default function New() {
 
 
   useEffect(() => {
+    const original_title = document.title
+    document.title = "Liste des documents d'audits"
+
     loadProcedures(setProcedures);
     loadProcedures(setProceduresCopie);
     loadPhases();
+
+    return () => {
+      document.title = original_title
+    }
   }, []);
 
 

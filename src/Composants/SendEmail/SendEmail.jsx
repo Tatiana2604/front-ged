@@ -58,6 +58,16 @@ export default function SendEmail() {
         })
     }
 
+
+    useEffect(() => {
+        const original_title = document.title
+        document.title = 'Envoyer des documents'
+
+        return () => {
+            document.title = original_title
+        }
+    }, [])
+
     
   return (
     <div id="email">

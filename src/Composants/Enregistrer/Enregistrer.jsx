@@ -334,8 +334,16 @@ export default function DocumentManager() {
 
 
   useEffect(() => {
+    const original_title = document.title
+    document.title = 'Liste des documents'
+
     obtenir_liste_exercices();
     recuperer_toutes_les_pieces();
+
+    return () => {
+      document.title = original_title
+    }
+
   }, [])
 
 

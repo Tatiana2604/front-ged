@@ -320,8 +320,16 @@ const Archive = () => {
 
 
   useEffect(() => {
+    const original_title = document.title
+    document.title = 'Documents archivés'
+
     recuperer_toutes_les_pieces();
     obtenir_liste_exercices();
+
+    return () => {
+      document.title = original_title
+    }
+
   }, [])
 
 

@@ -91,6 +91,23 @@ export default function Form() {
     const [poste_comptable, setPosteComptable] = useState(null)
 
 
+    const recuperer_image = (e) => {
+        let fichier= document.querySelector('.file-input').files[0];
+        let nom = fichier.name;
+        let nom_split = nom.split(".");
+        
+        handleChange("fichier", fichier);
+        handleChange("nom_fichier", fichier.name);
+        handleChange("type_fichier", nom_split[nom_split.length - 1]);
+        
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        save_file();
+    };
+
+
     useEffect(() => {
 
         fetchData(`${API_URL}/data/piece_comptable/get`, {}, 'get', setPieceComptable)
@@ -107,22 +124,17 @@ export default function Form() {
     }, [])
 
 
+    useEffect(() => {
 
-    const recuperer_image = (e) => {
-        let fichier= document.querySelector('.file-input').files[0];
-        let nom = fichier.name;
-        let nom_split = nom.split(".");
-        
-        handleChange("fichier", fichier);
-        handleChange("nom_fichier", fichier.name);
-        handleChange("type_fichier", nom_split[nom_split.length - 1]);
-        
-    };
+        const original_title = document.title
+        document.title = 'Ajouter un document'
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        save_file();
-    };
+        return () => {
+            document.title = original_title
+        }
+        
+    }, [])
+
 
   return (
     <div id='ajout-fichier' className="px-6">
