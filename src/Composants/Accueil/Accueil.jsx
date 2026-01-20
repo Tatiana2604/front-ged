@@ -200,7 +200,7 @@ export default function PiecesStatus() {
             arrived ? "text-green-600" : "text-red-600"
           }`}
         >
-          {arrived ? "✅ Arrivée" : "Non arrivée"}
+          {arrived ? "Arrivée" : "Non arrivée"}
           {late ? "; En retard" : ""}
         </td>
         <td className="p-2 border">

@@ -111,6 +111,30 @@ export default function New() {
   };
 
 
+//   const download_travail = (procedureId) => {
+//     window.open(
+//         `${API_URL}/log/procedures/${procedureId}/download_travail_valide`)
+// }
+
+const download_travail = (procedureId) => {
+  window.open(
+      `${API_URL}/log/procedures/${procedureId}/download_travail_valide`,
+      "_blank"
+  )
+}
+
+
+const download_procedure = (procedureId) => {
+  window.open(
+      `${API_URL}/log/procedures/${procedureId}/download_procedure`,
+      "_blank"
+  )
+}
+
+
+
+
+
   useEffect(() => {
     const original_title = document.title
     document.title = "Liste des documents d'audits"
@@ -218,28 +242,24 @@ export default function New() {
                       <td className="border p-2">{p.procedure || "N/A"}</td>
                       <td className="border p-2">
                         {p.document_procedure ? (
-                          <a
-                            href={`${API_URL}/procedures/${p.id}/download_procedure/`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-600 hover:underline"
+                          <button
+                            className="text-blue-600 cursor-pointer duration-150 ease-in-out hover:underline"
+                            onClick={() => download_procedure(p.id) }
                           >
                             Télécharger
-                          </a>
+                          </button>
                         ) : (
                           "Manquant"
                         )}
                       </td>
                       <td className="border p-2">
                         {p.document_travail_valide ? (
-                          <a
-                            href={`${API_URL}/procedures/${p.id}/download_travail/`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-600 hover:underline"
+                          <button
+                            className="text-blue-600 cursor-pointer duration-150 ease-in-out hover:underline"
+                            onClick={() => download_travail(p.id)}
                           >
                             Télécharger
-                          </a>
+                          </button>
                         ) : (
                           "Manquant"
                         )}
